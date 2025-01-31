@@ -1,19 +1,25 @@
-<div class="welcome-text">Welcome to Chat Room</div>    
+<div class="welcome-text">Welcome to Chat Room</div>
+
 <div class="chat-container">
-    <div *ngIf="!isNameSet" class="name-input">
-      <input [(ngModel)]="name" placeholder="Enter your name" />
-      <button (click)="setName()">Join Chat</button>
+  <div *ngIf="!isNameSet" class="name-input">
+    <input [(ngModel)]="name" placeholder="Enter your name" />
+    <button (click)="setName()">Join Chat</button>
+  </div>
+
+  <div *ngIf="isNameSet" class="chat-box">
+    <div *ngFor="let msg of messages; let i = index" 
+         [ngClass]="{'my-message-container': msg.name === name, 'other-message-container': msg.name !== name}">
+      <div *ngIf="i === 0 || messages[i-1].name !== msg.name" class="user-name">
+        {{ msg.name }}
+      </div>
+      <div class="message-bubble">
+        {{ msg.message }}
+      </div>
     </div>
-  
-    <div *ngIf="isNameSet" class="chat-box">
-      <div *ngFor="let msg of messages" [ngClass]="{'my-message': msg.name === name, 'other-message': msg.name !== name}">
-        <strong>{{ msg.name }}:</strong> {{ msg.message }}
-      </div>
-  
-      <div class="message-input">
-        <input [(ngModel)]="message" placeholder="Type a message" (keyup.enter)="sendMessage()" />
-        <button (click)="sendMessage()">Send</button>
-      </div>
+
+    <div class="message-input">
+      <input [(ngModel)]="message" placeholder="Type a message" (keyup.enter)="sendMessage()" />
+      <button (click)="sendMessage()">Send</button>
     </div>
   </div>
-  
+</div>
