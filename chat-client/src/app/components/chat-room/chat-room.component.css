@@ -89,4 +89,18 @@
     font-size: 14px;
     transition: background-color 0.3s;
   }
+
+  .logout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(219, 26, 26);
+    color: #e5e5ea;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 8px 15px;
+    width: 100%; 
+  }
   

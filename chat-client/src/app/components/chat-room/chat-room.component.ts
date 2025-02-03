@@ -5,60 +5,56 @@ import { SocketService } from 'src/app/services/socket.service';
 @Component({
   selector: 'app-chat-room',
   templateUrl: './chat-room.component.html',
-  styleUrls: ['./chat-room.component.css']
+  styleUrls: ['./chat-room.component.css'],
 })
 export class ChatRoomComponent implements OnInit {
-  name: string = '';  // Name of the user
-  message: string = '';  // Current message to be sent
-  messages: { name: string, message: string }[] = [];  // List of messages
-  users: string[] = [];  // List of users in the chat
-  isNameSet: boolean = false;  // Flag to check if user has set their name
+  name: string = '';
+  message: string = '';
+  messages: { name: string; message: string }[] = [];
+  users: string[] = [];
 
-  constructor(private router: Router, private socketService: SocketService) { }
+  constructor(private router: Router, private socketService: SocketService) {}
 
   ngOnInit(): void {
-    // Listen for incoming messages and update the messages list
+    this.name = sessionStorage.getItem('chatUser') || ''; 
+
+    if (!this.name) {
+      this.router.navigate(['/']); 
+      return;
+    }
+
+    this.socketService.joinChat(this.name);
+    // Listen for incoming messages
     this.socketService.receiveMessage().subscribe((data) => {
-      this.messages.push(data);  // Add the new message
+      this.messages.push(data);
     });
 
-    // Listen for user joining and update the users list
+    // Listen for users joining
     this.socketService.userJoined().subscribe((user) => {
       this.users.push(user);
     });
 
-    // Listen for user leaving and remove them from the users list
+    // Listen for users leaving
     this.socketService.userLeft().subscribe((user) => {
       const index = this.users.indexOf(user);
       if (index > -1) {
-        this.users.splice(index, 1);  // Remove the user
+        this.users.splice(index, 1);
       }
     });
   }
 
-  // Set the user's name and join the chat room
-  setName(): void {
-    if (this.name.trim() !== '') {
-      this.isNameSet = true;
-      this.socketService.joinChat(this.name);  // Emit to the server to join the chat
-    } else {
-      alert('Please enter a name');
-    }
-  }
-
-  // Send a message to the chat room
   sendMessage(): void {
-    if (this.message.trim() !== '' && this.isNameSet) {
-      this.socketService.sendMessage(this.name, this.message);  // Send message to the server
-      this.message = '';  // Clear the input field after sending
+    if (this.message.trim() !== '') {
+      this.socketService.sendMessage(this.name, this.message);
+      // this.messages.push({ name: this.name, message: this.message });
+      this.message = '';
     } else {
-      alert('Please set your name and type a message');
+      alert('Please type a message');
     }
   }
 
-  // Logout and navigate to the login page
-  logout(): void {
-    // this.socketService.leaveChat(this.name);  // Emit to leave the chat
-    this.router.navigate(['/']);  // Navigate to login page
+  onLogout(): void {
+    this.router.navigate(['/']); 
+    sessionStorage.removeItem('chatUser')
   }
 }

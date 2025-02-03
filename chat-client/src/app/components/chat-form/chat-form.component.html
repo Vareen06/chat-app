@@ -1,13 +1,26 @@
 <div>
-  <h1>Welcome to chat application</h1>
-    <h3>Enter Name:</h3>
-    <input type="text" placeholder="Name" [(ngModel)]="name" />
+  <h1>Welcome to Chat Application</h1>
+
+  <h3>Enter Name:</h3>
+  <input type="text" placeholder="Name" [(ngModel)]="name" #nameField="ngModel" required />
+  <div *ngIf="nameField.invalid && nameField.touched" class="error-message">
+    Name is required.
+  </div>
+
+  <h3>Enter Password:</h3>
+  <input type="password" placeholder="Password" [(ngModel)]="password" #passwordField="ngModel" required />
+  <div *ngIf="passwordField.invalid && passwordField.touched" class="error-message">
+    Password is required.
+  </div>
+
+  <br><br>
+
+  <button (click)="onSend()" [disabled]="nameField.invalid || passwordField.invalid">Login</button>
+  <br><br>
   
-    <h3>Enter Password:</h3>
-    <input type="password" placeholder="Password" [(ngModel)]="password" />
-  
-    <br><br>
-  
-    <button (click)="onSend()">Submit</button>
+  <div class="statement">
+    <p>Don't have an account?</p>
+    <button (click)="onRegister()" [disabled]="nameField.invalid || passwordField.invalid">Register</button>
   </div>
   
+</div>

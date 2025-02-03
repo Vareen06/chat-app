@@ -18,8 +18,12 @@ export class SocketService {
     return this.http.get<any[]>(`${this.apiURl}/users`);
   }
 
-  login(credentials: { name: string; password: string }): Observable<any> {
+  login(credentials: { name: string, password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiURl}/login`, credentials);
+  }
+
+  register(credentials: {name: string, password: string}): Observable<any>{
+    return this.http.post<any>(`${this.apiURl}/add`,credentials);
   }
 
   joinChat(name: string){
@@ -31,9 +35,7 @@ export class SocketService {
     this.socket.emit('chat',{name, message})
   }
 
-  // leaveChat(name: string): void {
-  //   this.socket.emit('leave-chat', name);
-  // }
+  
 
   receiveMessage():Observable<{name:string, message:string}>{
     return new Observable(observer=>{

@@ -18,6 +18,7 @@ export class ChatFormComponent {
       this.socketService.login({ name: this.name, password: this.password }).subscribe(
         (data) => {
           if (data && data.msg === 'Login Successfull') {
+            sessionStorage.setItem('chatUser', this.name);
             this.router.navigate(['/chat-room'], { state: { name: this.name } });  // Pass name via router state
           } else {
             alert('Invalid Credentials');
@@ -25,7 +26,33 @@ export class ChatFormComponent {
         },
         (error) => {
           console.error('Error:', error);
-          alert('An error occurred while logging in. Please try again later.');
+          if(error.status === 400){
+            alert('Invalid Credentials')
+          }else{
+            alert('An error occurred while logging in. Please try again later.');
+          }
+          
+        }
+      );
+    } else {
+      alert('Please enter both name and password');
+    }
+  }
+
+  onRegister() {
+    if (this.name && this.password) {
+      this.socketService.register({ name: this.name, password: this.password }).subscribe(
+        (data) => {
+          if (data && data.msg === 'Registration Successful') {
+            alert('Registration Successful! You will now be redirected to the chat room.');
+            this.router.navigate(['/chat-room'], { state: { name: this.name } }); 
+          } else {
+            alert('Registration Failed: ' + data.msg);
+          }
+        },
+        (error) => {
+          console.error('Error:', error);
+          alert('An error occurred while registering. Please try again later.');
         }
       );
     } else {

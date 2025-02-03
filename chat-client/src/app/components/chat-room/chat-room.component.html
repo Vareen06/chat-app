@@ -1,12 +1,7 @@
 <div class="welcome-text">Welcome to Chat Room</div>
 
 <div class="chat-container">
-  <div *ngIf="!isNameSet" class="name-input">
-    <input [(ngModel)]="name" placeholder="Enter your name" />
-    <button (click)="setName()">Join Chat</button>
-  </div>
-
-  <div *ngIf="isNameSet" class="chat-box">
+  <div class="chat-box">
     <div *ngFor="let msg of messages; let i = index" 
          [ngClass]="{'my-message-container': msg.name === name, 'other-message-container': msg.name !== name}">
       <div *ngIf="i === 0 || messages[i-1].name !== msg.name" class="user-name">
@@ -22,4 +17,8 @@
       <button (click)="sendMessage()">Send</button>
     </div>
   </div>
+  <br>
+  <button (click)="onLogout()" class="logout">Logout</button>
 </div>
+
+
